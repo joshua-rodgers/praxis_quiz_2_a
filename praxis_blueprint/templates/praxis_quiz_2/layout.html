@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Praxis 5652 Prep{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('praxis_quiz_2.static', filename='praxis_quiz_2/css/style.css') }}" />
+  </head>
+  <body class="praxis-body">
+    <header class="praxis-header">
+      <h1 class="praxis-title">Praxis 5652 Exam Prep</h1>
+      <nav class="praxis-nav">
+        <a href="{{ url_for('praxis_quiz_2.praxis_main.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('praxis_quiz_2.praxis_main.builder') }}">Builder</a>
+      </nav>
+    </header>
+    <main class="praxis-main">
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

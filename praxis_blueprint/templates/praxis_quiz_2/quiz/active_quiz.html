@@ -1,0 +1,32 @@
+{% extends "praxis_quiz_2/layout.html" %}
+
+{% block title %}Active Quiz · Praxis 5652{% endblock %}
+
+{% block content %}
+<section
+  class="praxis-card"
+  data-quiz-container
+  data-quiz-id="{{ quiz.id }}"
+  data-quiz-timer="{{ quiz.timer_seconds }}"
+  data-submit-url="{{ url_for('praxis_quiz_2.praxis_quiz_delivery.submit_answer') }}"
+  data-results-url="{{ url_for('praxis_quiz_2.praxis_quiz_delivery.results', quiz_id=quiz.id) }}"
+>
+  <div class="praxis-quiz-header">
+    <h2>Active Quiz</h2>
+    <span class="praxis-timer" data-timer-display>--</span>
+  </div>
+  <p class="praxis-question" data-question-text></p>
+  <div class="praxis-code-container" data-code-container hidden>
+    <pre class="praxis-code-block" data-language="praxis-pseudo" data-code-block></pre>
+  </div>
+  <div class="praxis-options" data-question-options></div>
+  <div class="praxis-feedback" data-quiz-feedback></div>
+  <div class="praxis-quiz-footer">
+    <span class="praxis-progress" data-quiz-progress></span>
+    <button class="praxis-button" type="button" data-next-question>Next question</button>
+  </div>
+</section>
+<script type="application/json" data-quiz-data>{{ questions|tojson }}</script>
+<script src="{{ url_for('praxis_quiz_2.static', filename='praxis_quiz_2/js/quiz_engine.js') }}"></script>
+<script src="{{ url_for('praxis_quiz_2.static', filename='praxis_quiz_2/js/syntax_highlighter.js') }}"></script>
+{% endblock %}

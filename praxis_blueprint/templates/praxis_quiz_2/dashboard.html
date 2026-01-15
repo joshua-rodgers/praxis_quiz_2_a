@@ -1,0 +1,11 @@
+{% extends "praxis_quiz_2/layout.html" %}
+
+{% block title %}Dashboard · Praxis 5652{% endblock %}
+
+{% block content %}
+<section class="praxis-card">
+  <h2>Dashboard</h2>
+  <p>Track your progress and launch practice quizzes.</p>
+  <a class="praxis-button" href="{{ url_for('praxis_quiz_2.praxis_main.builder') }}">Build a quiz</a>
+</section>
+{% endblock %}

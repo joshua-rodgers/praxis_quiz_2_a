@@ -1,0 +1,28 @@
+{% extends "praxis_quiz_2/layout.html" %}
+
+{% block title %}Quiz Results · Praxis 5652{% endblock %}
+
+{% block content %}
+<section class="praxis-card">
+  <h2>Results</h2>
+  <p>Your score: <strong>{{ quiz.score }}</strong> / {{ quiz.total_questions }}</p>
+  <div class="praxis-results">
+    {% for attempt in attempts %}
+      <div class="praxis-result-item">
+        <h3>Question {{ loop.index }}</h3>
+        <p>{{ attempt.question_text }}</p>
+        {% if attempt.code_html %}
+          {{ attempt.code_html | safe }}
+        {% endif %}
+        <p>
+          Your answer: <strong>{{ attempt.user_answer or "No answer" }}</strong>
+          · Correct: <strong>{{ attempt.correct_answer }}</strong>
+        </p>
+        {% if attempt.explanation_html %}
+          <div class="praxis-explanation">{{ attempt.explanation_html | safe }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

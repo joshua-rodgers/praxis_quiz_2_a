@@ -1,0 +1,40 @@
+{% extends "praxis_quiz_2/layout.html" %}
+
+{% block title %}Quiz Builder · Praxis 5652{% endblock %}
+
+{% block content %}
+<section class="praxis-card">
+  <h2>Quiz Builder</h2>
+  <p>Select categories and difficulty to generate practice questions.</p>
+  {% if error %}
+    <div class="praxis-alert praxis-alert-error">{{ error }}</div>
+  {% endif %}
+  <form class="praxis-form" method="post" action="{{ url_for('praxis_quiz_2.praxis_main.builder') }}">
+    <label class="praxis-field">
+      <span>Category</span>
+      <select name="category" required>
+        {% for cat in ["Impacts of Computing", "Algorithms & Computational Thinking", "Programming", "Data", "Computing Systems & Networks"] %}
+          <option value="{{ cat }}" {% if form_data.category == cat %}selected{% endif %}>{{ cat }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label class="praxis-field">
+      <span>Difficulty</span>
+      <select name="difficulty">
+        {% for level in ["Easy", "Medium", "Hard"] %}
+          <option value="{{ level }}" {% if form_data.difficulty == level %}selected{% endif %}>{{ level }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label class="praxis-field">
+      <span>Question count</span>
+      <input type="number" name="question_count" min="1" max="10" value="{{ form_data.question_count }}" />
+    </label>
+    <label class="praxis-field praxis-field-inline">
+      <input type="checkbox" name="timer" {% if form_data.timer %}checked{% endif %} />
+      <span>Enable 5-minute timer</span>
+    </label>
+    <button class="praxis-button" type="submit">Generate quiz</button>
+  </form>
+</section>
+{% endblock %}
