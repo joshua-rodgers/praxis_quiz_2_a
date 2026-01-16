@@ -71,7 +71,7 @@ def _upload_reference_files(client):
         while retry_count < MAX_RETRIES:
             try:
                 logger.info(f"Uploading {name}: {path.name}")
-                uploaded_file = client.files.upload(file=str(path))
+                uploaded_file = client.files.upload(file=str(path), mime_type="text/markdown")
                 files.append(uploaded_file)
                 logger.debug(f"Successfully uploaded {name} (URI: {uploaded_file.uri})")
                 break
