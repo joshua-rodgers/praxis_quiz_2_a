@@ -6,6 +6,39 @@ const PraxisQuiz = {
     questions: [],
     currentIndex: 0,
   },
+  /**
+   * Escapes HTML characters to prevent XSS
+   */
+  escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  },
+  /**
+   * Formats option text with proper code rendering
+   * - Detects multi-line code and wraps in <pre> tags
+   * - Detects inline code (backticks) and wraps in <code> tags
+   * - Returns plain text otherwise
+   */
+  formatOptionText(text, optionKey) {
+    // Check for multi-line code (contains newlines)
+    if (text.includes('\n')) {
+      const escapedCode = this.escapeHtml(text);
+      return `<div class="praxis-option-label">${optionKey}.</div><div class="praxis-code-container" style="margin: 8px 0 0 0;"><pre class="praxis-code-block" data-language="praxis-pseudo">${escapedCode}</pre></div>`;
+    }
+
+    // Check for inline code markers (backticks)
+    if (text.includes('`')) {
+      // Replace backticks with <code> tags
+      const formatted = text.replace(/`([^`]+)`/g, (match, code) => {
+        return `<code style="font-family: var(--font-mono); background: var(--color-bg-code); padding: 2px 6px; border: 1px solid var(--color-border);">${this.escapeHtml(code)}</code>`;
+      });
+      return `${optionKey}. ${formatted}`;
+    }
+
+    // Plain text option
+    return `${optionKey}. ${this.escapeHtml(text)}`;
+  },
   startTimer(seconds, resultsUrl) {
     if (this.state.timerId) {
       clearInterval(this.state.timerId);
@@ -106,7 +139,18 @@ document.addEventListener("DOMContentLoaded", () => {
       button.type = "button";
       button.className = "praxis-button praxis-option-button";
       button.dataset.option = key;
-      button.textContent = `${key}. ${value}`;
+
+      // Use formatOptionText to handle code formatting
+      button.innerHTML = PraxisQuiz.formatOptionText(value, key);
+
+      // Apply syntax highlighting to code blocks if highlighter is available
+      if (window.PraxisSyntaxHighlighter) {
+        const codeBlock = button.querySelector('.praxis-code-block');
+        if (codeBlock) {
+          window.PraxisSyntaxHighlighter.applyHighlighting(codeBlock);
+        }
+      }
+
       optionsContainer.appendChild(button);
     });
 

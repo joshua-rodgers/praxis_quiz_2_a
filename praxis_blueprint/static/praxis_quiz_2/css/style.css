@@ -186,6 +186,32 @@ body.praxis-body {
 .praxis-option-button {
   justify-content: flex-start;
   text-align: left;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.praxis-option-label {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+/* Style for inline code within options */
+.praxis-option-button code {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  background: var(--color-bg-code);
+  padding: 2px 6px;
+  border: 1px solid var(--color-border);
+}
+
+/* Ensure code blocks in options don't have extra margin */
+.praxis-option-button .praxis-code-container {
+  width: 100%;
+  margin: 8px 0 0 0;
+}
+
+.praxis-option-button .praxis-code-block {
+  font-size: 0.8125rem;
 }
 
 /* ============================================
