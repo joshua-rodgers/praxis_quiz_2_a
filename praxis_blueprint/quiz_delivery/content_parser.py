@@ -1,4 +1,5 @@
 import json
+import re
 from html import escape
 
 
@@ -32,7 +33,30 @@ class ContentParser:
         try:
             import markdown  # type: ignore
 
-            return markdown.markdown(text, extensions=["fenced_code", "tables"])
+            html = markdown.markdown(text, extensions=["fenced_code", "tables"])
+
+            # Post-process: Convert <pre><code> blocks to praxis format
+            # This regex matches <pre><code ...>content</code></pre> blocks
+            def replace_code_block(match):
+                code_content = match.group(1)
+                # Unescape the HTML entities in the code content
+                # (markdown library escapes the content)
+                return (
+                    '<div class="praxis-code-container">'
+                    '<pre class="praxis-code-block" data-language="praxis-pseudo">'
+                    f'{code_content}'
+                    '</pre></div>'
+                )
+
+            # Match <pre><code ...>...</code></pre> patterns
+            html = re.sub(
+                r'<pre><code(?:\s+class="[^"]*")?>([^<]*(?:<(?!/code>)[^<]*)*)</code></pre>',
+                replace_code_block,
+                html,
+                flags=re.DOTALL
+            )
+
+            return html
         except ModuleNotFoundError:
             return "<p>" + escape(text).replace("\n", "<br>") + "</p>"
 
