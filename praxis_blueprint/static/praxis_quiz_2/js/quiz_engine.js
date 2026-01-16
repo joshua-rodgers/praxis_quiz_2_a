@@ -15,6 +15,23 @@ const PraxisQuiz = {
     return div.innerHTML;
   },
   /**
+   * Formats question text with inline code rendering
+   * - Detects inline code (backticks) and wraps in <code> tags
+   * - Returns formatted HTML
+   */
+  formatQuestionText(text) {
+    // Check for inline code markers (backticks)
+    if (text.includes('`')) {
+      // Replace backticks with <code> tags
+      return text.replace(/`([^`]+)`/g, (match, code) => {
+        return `<code class="praxis-inline-code">${this.escapeHtml(code)}</code>`;
+      });
+    }
+
+    // Plain text
+    return this.escapeHtml(text);
+  },
+  /**
    * Formats option text with proper code rendering
    * - Detects multi-line code and wraps in <pre> tags
    * - Detects inline code (backticks) and wraps in <code> tags
@@ -31,7 +48,7 @@ const PraxisQuiz = {
     if (text.includes('`')) {
       // Replace backticks with <code> tags
       const formatted = text.replace(/`([^`]+)`/g, (match, code) => {
-        return `<code style="font-family: var(--font-mono); background: var(--color-bg-code); padding: 2px 6px; border: 1px solid var(--color-border);">${this.escapeHtml(code)}</code>`;
+        return `<code class="praxis-inline-code">${this.escapeHtml(code)}</code>`;
       });
       return `${optionKey}. ${formatted}`;
     }
@@ -121,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!question) {
       return;
     }
-    questionText.textContent = question.question_text;
+    questionText.innerHTML = PraxisQuiz.formatQuestionText(question.question_text);
     if (question.code_snippet) {
       codeContainer.hidden = false;
       codeBlock.textContent = question.code_snippet;
